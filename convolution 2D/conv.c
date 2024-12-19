@@ -5,41 +5,18 @@
 #define TAM_SAIDA (TAM_ENTRADA - TAM_KERNEL + 1)
 
 void convolucao2D(int entrada1D[], int kernel1D[], int tamEntrada, int tamKernel, int saida[]);
+void lerMatriz2D(const char *nomeArquivo, int *matriz, int linhas, int colunas);
 
 int main()
 {
-    int entrada[TAM_ENTRADA][TAM_ENTRADA] = {
-        {9, 8, 7},
-        {6, 5, 4},
-        {3, 2, 1}};
 
-    int kernel[TAM_KERNEL][TAM_KERNEL] = {
-        {1, 0},
-        {0, -1}};
-
-//criei as versóes 1D das matrizes 
     int entrada1D[TAM_ENTRADA * TAM_ENTRADA];
     int kernel1D[TAM_KERNEL * TAM_KERNEL];
 
-// transferi a 2D da entrada para 1D
-    for(int i = 0; i < TAM_ENTRADA; i++){
-        for(int j = 0 ; j < TAM_ENTRADA; j++){
-            entrada1D[i * TAM_ENTRADA + j] = entrada[i][j];
-
-        }
-    }
-// transferi a 2D do kernel para 1D
-    for(int i = 0; i < TAM_KERNEL; i++){
-        for(int j = 0 ; j < TAM_KERNEL; j++){
-            kernel1D[i * TAM_KERNEL + j] = kernel[i][j];
-
-        }
-    }
-    
+    lerMatriz2D("entrada.txt", entrada1D, TAM_ENTRADA, TAM_ENTRADA);
+    lerMatriz2D("kernel.txt", kernel1D, TAM_KERNEL, TAM_KERNEL);
 
     int saida[TAM_SAIDA * TAM_SAIDA] = {0};
-
-
 
     convolucao2D(entrada1D, kernel1D, TAM_ENTRADA, TAM_KERNEL, saida);
 
@@ -74,4 +51,25 @@ void convolucao2D(int entrada1D[], int kernel1D[], int colEntrada, int colKernel
             saida[i * TAM_SAIDA + j] = soma;
         }
     }
+}
+
+// faz a leitura de uma matriz 2D de um arquivo, e cria uma 1D
+void lerMatriz2D(const char *nomeArquivo, int *matriz, int linhas, int colunas)
+{
+    FILE *arquivo = fopen(nomeArquivo, "r");
+    if (arquivo == NULL)
+    {
+        printf("Erro ao abrir o arquivo: %s\n", nomeArquivo);
+        return;
+    }
+
+    for (int i = 0; i < linhas; i++)
+    {
+        for (int j = 0; j < colunas; j++)
+        {
+            fscanf(arquivo, "%d", &matriz[i * colunas + j]);
+        }
+    }
+
+    fclose(arquivo);
 }
