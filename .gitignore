@@ -1,0 +1,9 @@
+# Ignorar o executável padrão do GCC
+a.out
+a.exe
+
+# Ignorar todos os executáveis (arquivos sem extensão gerados por compiladores)
+*.exe
+*.out
+*.bin
+
