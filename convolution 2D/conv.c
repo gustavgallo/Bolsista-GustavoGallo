@@ -7,14 +7,16 @@ int * lerMatriz2D(const char *nomeArquivo, int *linhas, int *colunas);
 
 int main()
 {
-int tamEntrada, tamKernel;
+int tamEntrada, tamEntrada2, tamEntrada3, tamKernel;
 
-    int *entrada1D = lerMatriz2D("entrada.txt", &tamEntrada, &tamEntrada);
+    int *entrada1 = lerMatriz2D("entrada1.txt", &tamEntrada, &tamEntrada);
+    int *entrada2 = lerMatriz2D("entrada2.txt", &tamEntrada2, &tamEntrada2);
+    int *entrada3 = lerMatriz2D("entrada3.txt", &tamEntrada3, &tamEntrada3);
     int *kernel1D = lerMatriz2D("kernel.txt", &tamKernel, &tamKernel);
 
-      if (entrada1D == NULL || kernel1D == NULL)
+      if (entrada1 == NULL || kernel1D == NULL)
     {
-        free(entrada1D);
+        free(entrada1);
         free(kernel1D);
         return 1; // Saída em caso de erro
     }
@@ -24,7 +26,7 @@ int tamEntrada, tamKernel;
   
         
 
-    convolucao2D(entrada1D, kernel1D, tamEntrada, tamKernel, saida, tamSaida);
+    convolucao2D(entrada1, kernel1D, tamEntrada, tamKernel, saida, tamSaida);
 
     printf("Matriz de saída:\n");
     for (int i = 0; i < tamSaida; i++)
@@ -36,7 +38,7 @@ int tamEntrada, tamKernel;
         printf("\n");
     }
 
-    free(entrada1D);
+    free(entrada1);
     free(kernel1D);
     free(saida);
 
