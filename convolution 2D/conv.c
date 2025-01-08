@@ -14,11 +14,34 @@ int tamEntrada, tamEntrada2, tamEntrada3, tamKernel;
     int *entrada3 = lerMatriz2D("entrada3.txt", &tamEntrada3, &tamEntrada3);
     int *kernel1D = lerMatriz2D("kernel.txt", &tamKernel, &tamKernel);
 
-      if (entrada1 == NULL || kernel1D == NULL)
+  
+    if (entrada1 == NULL || entrada2 == NULL || entrada3 == NULL || kernel1D == NULL)
     {
         free(entrada1);
+        free(entrada2);
+        free(entrada3);
         free(kernel1D);
-        return 1; // Saída em caso de erro
+        return 1; 
+    }
+
+    
+    if (tamEntrada != tamEntrada2 || tamEntrada != tamEntrada3)
+    {
+        printf("As camadas de entrada devem ter o mesmo tamanho.\n");
+        free(entrada1);
+        free(entrada2);
+        free(entrada3);
+        free(kernel1D);
+        return 1;
+    }
+
+    // Combina as 3 camadas em um unico vetor
+    int *entradaCombinada = (int *)malloc(3 * tamEntrada * tamEntrada * sizeof(int));
+    for (int i = 0; i < tamEntrada * tamEntrada; i++)
+    {
+        entradaCombinada[i] = entrada1[i];
+        entradaCombinada[i + tamEntrada * tamEntrada] = entrada2[i];
+        entradaCombinada[i + 2 * tamEntrada * tamEntrada] = entrada3[i];
     }
 
     int tamSaida = tamEntrada - tamKernel + 1; 
@@ -39,6 +62,8 @@ int tamEntrada, tamEntrada2, tamEntrada3, tamKernel;
     }
 
     free(entrada1);
+    free(entrada2);
+    free(entrada3);
     free(kernel1D);
     free(saida);
 
