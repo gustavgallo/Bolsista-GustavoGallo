@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 void convolucao2D(int entrada1D[], int kernel1D[], int tamEntrada, int tamKernel,int tamCamadas, int saida[], int tamSaida);
 int *lerMatriz2D(const char *nomeArquivo, int *linhas, int *colunas);
@@ -44,8 +45,10 @@ int main()
 
     int tamSaida = tamEntrada - tamKernel + 1;
     int *saida = (int *)malloc(tamSaida * tamSaida * sizeof(int));
+    //zera todos valores
+    memset(saida, 0, tamSaida * tamSaida * sizeof(int));
 
-    convolucao2D(entrada1, kernel1D, tamEntrada, tamKernel,tamCamadas, saida, tamSaida);
+    convolucao2D(entradaCombinada, kernel1D, tamEntrada, tamKernel,tamCamadas, saida, tamSaida);
 
     printf("Matriz de saída:\n");
     for (int i = 0; i < tamSaida; i++)
