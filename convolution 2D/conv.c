@@ -7,30 +7,38 @@ int *lerMatriz2D(const char *nomeArquivo, int *linhas, int *colunas);
 
 int main()
 {
-    int tamEntrada, tamEntrada2, tamEntrada3, tamKernel;
+    int tamEntrada, tamEntrada2, tamEntrada3, tamKernel, tamKernel2, tamKernel3;
     int tamCamadas = 3;
 
     int *entrada1 = lerMatriz2D("entrada1.txt", &tamEntrada, &tamEntrada);
     int *entrada2 = lerMatriz2D("entrada2.txt", &tamEntrada2, &tamEntrada2);
     int *entrada3 = lerMatriz2D("entrada3.txt", &tamEntrada3, &tamEntrada3);
-    int *kernel1D = lerMatriz2D("kernel.txt", &tamKernel, &tamKernel);
+    int *kernel1 = lerMatriz2D("kernel1.txt", &tamKernel, &tamKernel);
+    int *kernel2 = lerMatriz2D("kernel2.txt", &tamKernel2, &tamKernel2);
+    int *kernel3 = lerMatriz2D("kernel3.txt", &tamKernel3, &tamKernel3);
 
-    if (entrada1 == NULL || entrada2 == NULL || entrada3 == NULL || kernel1D == NULL)
+
+    if (entrada1 == NULL || entrada2 == NULL || entrada3 == NULL || kernel1 == NULL || kernel2 == NULL || kernel3 == NULL)
     {
         free(entrada1);
         free(entrada2);
         free(entrada3);
-        free(kernel1D);
+        free(kernel1);
+        free(kernel2);
+        free(kernel3);
         return 1;
     }
-
+   
     if (tamEntrada != tamEntrada2 || tamEntrada != tamEntrada3)
     {
         printf("As camadas de entrada devem ter o mesmo tamanho.\n");
         free(entrada1);
         free(entrada2);
         free(entrada3);
-        free(kernel1D);
+        free(kernel1);
+        free(kernel2);
+        free(kernel3);
+
         return 1;
     }
 
@@ -42,6 +50,16 @@ int main()
         entradaCombinada[i + tamEntrada * tamEntrada] = entrada2[i];
         entradaCombinada[i + 2 * tamEntrada * tamEntrada] = entrada3[i];
     }
+
+    // Combina os 3 kernels em um unico vetor
+    int *kernel1D = (int *)malloc(tamCamadas * tamKernel * tamKernel * sizeof(int));
+    for (int i = 0; i< tamKernel * tamKernel; i++){
+        kernel1D[i] = kernel1[i];
+        kernel1D[i + tamKernel * tamKernel] = kernel2[i];
+        kernel1D[i + 2 * tamKernel * tamKernel] = kernel3[i];   
+
+    }
+
 
     int tamSaida = tamEntrada - tamKernel + 1;
     int *saida = (int *)malloc(tamSaida * tamSaida * sizeof(int));
@@ -63,6 +81,10 @@ int main()
     free(entrada1);
     free(entrada2);
     free(entrada3);
+    free(entradaCombinada);
+    free(kernel1); 
+    free(kernel2);
+    free(kernel3);
     free(kernel1D);
     free(saida);
 
@@ -80,17 +102,19 @@ void convolucao2D(int entrada1D[], int kernel1D[], int colEntrada, int colKernel
 
             for (int camada = 0; camada < tamCamadas; camada++)
             {
+                for(int kernels = 0; kernels < tamCamadas; kernels++){
+
                 for (int l = 0; l < colKernel; l++)
                 {
                     for (int c = 0; c < colKernel; c++)
                     {
                         int indexEntrada = camada * colEntrada * colEntrada + (i + l) * colEntrada + (j + c);
-                        int indexKernel = l * colKernel  + c;
+                        int indexKernel = kernels * colKernel * colKernel + l * colKernel + c;
                         
                           soma += kernel1D[indexKernel] * entrada1D[indexEntrada];
                     }
                 }
-                
+                }
             }
             saida[i * tamSaida + j] = soma;
         }
